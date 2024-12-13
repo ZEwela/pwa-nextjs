@@ -1,18 +1,12 @@
 import { useEffect, useState } from "react";
 
-declare global {
-  interface Window {
-    MSStream?: unknown; // Use 'unknown' type for better type safety
-  }
-}
-
 export function InstallPrompt() {
   const [isIOS, setIsIOS] = useState<boolean>(false);
   const [isStandalone, setIsStandalone] = useState<boolean>(false);
 
   useEffect(() => {
     // Check if the device is iOS
-    setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream);
+    setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent));
 
     // Check if the app is in standalone mode
     setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
