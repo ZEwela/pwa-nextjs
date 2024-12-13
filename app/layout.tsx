@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   viewport:
     "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
   icons: [
-    { rel: "apple-touch-icon", url: "abstract-128.png" },
-    { rel: "icon", url: "abstract-128.png" },
+    { rel: "apple-touch-icon", url: "abstract-128-mascable.png" },
+    { rel: "icon", url: "abstract-128-mascable.png" },
   ],
 };
 
