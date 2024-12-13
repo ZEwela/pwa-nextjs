@@ -6,7 +6,7 @@
 
 ## Live Demo
 
-You can view the live version of the pwa-nextjs app here: [pwa-nextjs](link here)
+You can view the live version of the pwa-nextjs app here: [pwa-nextjs](https://pwa-nextjs-zewelas-projects.vercel.app/)
 
 ## PWA Installation Instructions
 
