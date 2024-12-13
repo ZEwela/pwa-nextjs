@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pwa-nextjs
+
+## Overview
+
+**pwa-nextjs** is a Next.js progressive wev application.
+
+## Live Demo
+
+You can view the live version of the pwa-nextjs app here: [pwa-nextjs](link here)
+
+## PWA Installation Instructions
+
+This app is a Progressive Web App (PWA), which means you can install it directly on your device for an enhanced experience, similar to a native application.
+
+You can install this app on your device by following these steps:
+
+1. Open the app in your browser.
+2. Look for the install prompt or the option in your browser's menu.
+3. Follow the instructions to add the app to your device.
+
+For detailed instructions on how to install PWAs on different devices, please refer to the following link:
+
+[How to Install a PWA to Your Device](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Installing)
+
+## Table of Contents
+
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Setup Environment Variables](#setup-environment-variables)
+- [Usage](#usage)
+- [Contributing](#contributing)
+
+## Features
 
 ## Getting Started
 
-First, run the development server:
+To get a local copy of this project up and running, follow these simple steps.
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- **Node.js** (version 14.x or higher)
+- **npm** (comes with Node.js)
+- Alternatively, you can use **Yarn**, **pnpm**, or **bun** as your package manager.
+
+## Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/ZEwela/pwa-nextjs.git
+
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd pwa-nextjs
+
+   ```
+
+3. Navigate to the project directory:
 
 ```bash
-npm run dev
+npm install
 # or
-yarn dev
+yarn install
 # or
-pnpm dev
+pnpm install
 # or
-bun dev
+bun install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To access the environment Variables, you need to create a `.env` file in the root directory of your project and add your secrets.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Steps to Get the API Key:
 
-## Learn More
+#### Add the API Key to `.env`
 
-To learn more about Next.js, take a look at the following resources:
+## Usage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Run the development server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
 
-## Deploy on Vercel
+2. Open your browser and navigate to http://localhost:3000 to see the application in action.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Contributions are welcome! If you'd like to contribute to this project, please fork the repository and submit a pull request. For major changes, please open an issue first to discuss what you would like to change.
