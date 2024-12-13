@@ -1,0 +1,15 @@
+{
+  "name": "pwa-nextjs",
+  "short_name": "pwanext",
+  "theme_color": "#35155D",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "orientation": "natural",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    { "src": "/abstract-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/abstract-256.png", "type": "image/png", "sizes": "256x256" },
+    { "src": "/abstract-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}
