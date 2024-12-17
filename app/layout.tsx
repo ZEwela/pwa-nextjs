@@ -22,28 +22,24 @@ export const metadata: Metadata = {
   generator: "Next.js",
   manifest: "/manifest.json",
   keywords: ["nextjs", "next14", "pwa", "next-pwa"],
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+  ],
   authors: [
     {
       name: "ewelaZ",
       url: "https://www.linkedin.com/in/ewelina-zawol-94526998/",
     },
   ],
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+  },
   icons: [
     { rel: "apple-touch-icon", url: "abstract-128-mascable.png" },
     { rel: "icon", url: "abstract-128-mascable.png" },
   ],
-};
-
-export const themeColor = [
-  { media: "(prefers-color-scheme: dark)", color: "#ffffff" },
-];
-
-export const viewport = {
-  width: "device-width",
-  initialScale: 1,
-  minimumScale: 1,
-  shrinkToFit: "no",
-  viewportFit: "cover",
 };
 
 export default async function RootLayout({
