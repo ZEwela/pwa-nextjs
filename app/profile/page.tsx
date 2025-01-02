@@ -1,5 +1,6 @@
 import { createClient } from "@/utilis/supabase/server";
 import { InfoIcon } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
@@ -27,6 +28,11 @@ export default async function ProfilePage() {
         <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
           {JSON.stringify(user, null, 2)}
         </pre>
+      </div>
+      <div>
+        <Link href="profile/add-event">
+          <button>Add Event</button>
+        </Link>
       </div>
     </div>
   );

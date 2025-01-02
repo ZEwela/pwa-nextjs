@@ -1,6 +1,7 @@
 import React from "react";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { Event } from "../types/event";
+import Image from "next/image";
 
 interface EventCardProps {
   event: Event;
@@ -9,10 +10,13 @@ interface EventCardProps {
 export function EventCard({ event }: EventCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]">
-      <img
+      <Image
         src={event.image}
         alt={event.title}
         className="w-full h-48 object-cover"
+        width={500}
+        height={300}
+        priority
       />
       <div className="p-6">
         <div className="flex items-center gap-2 mb-2">
