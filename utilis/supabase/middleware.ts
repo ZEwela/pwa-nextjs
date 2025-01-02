@@ -23,7 +23,7 @@ export const updateSession = async (request: NextRequest) => {
 
   // Refresh session if expired
   const {
-    data: { user },
+    // data: { user },
     error,
   } = await supabase.auth.getUser();
 
@@ -32,10 +32,10 @@ export const updateSession = async (request: NextRequest) => {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
-  // Redirect logged-in users accessing the homepage
-  if (request.nextUrl.pathname === "/" && user) {
-    return NextResponse.redirect(new URL("/profile", request.url));
-  }
+  // // Redirect logged-in users accessing the homepage
+  // if (request.nextUrl.pathname === "/" && user) {
+  //   return NextResponse.redirect(new URL("/profile", request.url));
+  // }
 
   // Return the updated response
   return response;

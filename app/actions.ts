@@ -1,5 +1,6 @@
 "use server";
 
+import { Event } from "@/types/event";
 import { createClient } from "@/utilis/supabase/server";
 import { encodedRedirect } from "@/utilis/utilis";
 
@@ -132,3 +133,14 @@ export const signOutAction = async () => {
   await supabase.auth.signOut();
   return redirect("/sign-in");
 };
+
+type CreateEventData = Omit<Event, "id" | "created_at"> & {
+  user_id: string;
+};
+
+export async function createEvent(eventData: CreateEventData) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("events").insert(eventData);
+
+  if (error) throw error;
+}

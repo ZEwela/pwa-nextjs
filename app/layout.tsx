@@ -52,6 +52,7 @@ export default async function RootLayout({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
   return (
     <html lang="en" className="h-full">
       <body
@@ -64,7 +65,7 @@ export default async function RootLayout({
           </Link>
           {user ? (
             <div className="flex items-center gap-4">
-              Hey, {user.email}!
+              <Link href="/profile"> Hey, {user.email}!</Link>
               <form action={signOutAction}>
                 <Button type="submit" variant={"outline"}>
                   Sign out
@@ -84,7 +85,9 @@ export default async function RootLayout({
         </nav>
 
         {/* Main content */}
-        <main className="flex-grow px-6 py-8">{children}</main>
+        <main className="flex-grow px-6 py-8 items-center justify-items-center">
+          {children}
+        </main>
 
         {/* Footer */}
         <footer className="bg-gray-100 text-gray-700 py-4">
