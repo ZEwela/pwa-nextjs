@@ -1,23 +1,24 @@
-"use server";
+'use server';
 
-import { Event } from "@/types/event";
-import { createClient } from "@/utilis/supabase/server";
-import { encodedRedirect } from "@/utilis/utilis";
+import { Event } from '@/types/event';
+import { UserID } from '@/types/user';
+import { createClient } from '@/utilis/supabase/server';
+import { encodedRedirect } from '@/utilis/utilis';
 
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export const signUpAction = async (formData: FormData) => {
-  const email = formData.get("email")?.toString();
-  const password = formData.get("password")?.toString();
+  const email = formData.get('email')?.toString();
+  const password = formData.get('password')?.toString();
   const supabase = await createClient();
-  const origin = (await headers()).get("origin");
+  const origin = (await headers()).get('origin');
 
   if (!email || !password) {
     return encodedRedirect(
-      "error",
-      "/sign-up",
-      "Email and password are required"
+      'error',
+      '/sign-up',
+      'Email and password are required',
     );
   }
 
@@ -30,20 +31,20 @@ export const signUpAction = async (formData: FormData) => {
   });
 
   if (error) {
-    console.error(error.code + " " + error.message);
-    return encodedRedirect("error", "/sign-up", error.message);
+    console.error(error.code + ' ' + error.message);
+    return encodedRedirect('error', '/sign-up', error.message);
   } else {
     return encodedRedirect(
-      "success",
-      "/sign-up",
-      "Thanks for signing up! Please check your email for a verification link."
+      'success',
+      '/sign-up',
+      'Thanks for signing up! Please check your email for a verification link.',
     );
   }
 };
 
 export const signInAction = async (formData: FormData) => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -52,20 +53,20 @@ export const signInAction = async (formData: FormData) => {
   });
 
   if (error) {
-    return encodedRedirect("error", "/sign-in", error.message);
+    return encodedRedirect('error', '/sign-in', error.message);
   }
 
-  return redirect("/profile");
+  return redirect('/profile');
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
-  const email = formData.get("email")?.toString();
+  const email = formData.get('email')?.toString();
   const supabase = await createClient();
-  const origin = (await headers()).get("origin");
-  const callbackUrl = formData.get("callbackUrl")?.toString();
+  const origin = (await headers()).get('origin');
+  const callbackUrl = formData.get('callbackUrl')?.toString();
 
   if (!email) {
-    return encodedRedirect("error", "/forgot-password", "Email is required");
+    return encodedRedirect('error', '/forgot-password', 'Email is required');
   }
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -74,9 +75,9 @@ export const forgotPasswordAction = async (formData: FormData) => {
   if (error) {
     console.error(error.message);
     return encodedRedirect(
-      "error",
-      "/forgot-password",
-      "Could not reset password"
+      'error',
+      '/forgot-password',
+      'Could not reset password',
     );
   }
 
@@ -85,31 +86,31 @@ export const forgotPasswordAction = async (formData: FormData) => {
   }
 
   return encodedRedirect(
-    "success",
-    "/forgot-password",
-    "Check your email for a link to reset your password."
+    'success',
+    '/forgot-password',
+    'Check your email for a link to reset your password.',
   );
 };
 
 export const resetPasswordAction = async (formData: FormData) => {
   const supabase = await createClient();
 
-  const password = formData.get("password") as string;
-  const confirmPassword = formData.get("confirmPassword") as string;
+  const password = formData.get('password') as string;
+  const confirmPassword = formData.get('confirmPassword') as string;
 
   if (!password || !confirmPassword) {
     encodedRedirect(
-      "error",
-      "/profile/reset-password",
-      "Password and confirm password are required"
+      'error',
+      '/profile/reset-password',
+      'Password and confirm password are required',
     );
   }
 
   if (password !== confirmPassword) {
     encodedRedirect(
-      "error",
-      "/profile/reset-password",
-      "Passwords do not match"
+      'error',
+      '/profile/reset-password',
+      'Passwords do not match',
     );
   }
 
@@ -119,28 +120,46 @@ export const resetPasswordAction = async (formData: FormData) => {
 
   if (error) {
     encodedRedirect(
-      "error",
-      "/profile/reset-password",
-      "Password update failed"
+      'error',
+      '/profile/reset-password',
+      'Password update failed',
     );
   }
 
-  encodedRedirect("success", "/profile/reset-password", "Password updated");
+  encodedRedirect('success', '/profile/reset-password', 'Password updated');
 };
 
 export const signOutAction = async () => {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  return redirect("/sign-in");
+  return redirect('/sign-in');
 };
 
-type CreateEventData = Omit<Event, "id" | "created_at"> & {
+type CreateEventData = Omit<Event, 'id' | 'created_at'> & {
   user_id: string;
 };
 
 export async function createEvent(eventData: CreateEventData) {
   const supabase = await createClient();
-  const { error } = await supabase.from("events").insert(eventData);
+  const { error } = await supabase.from('events').insert(eventData);
 
   if (error) throw error;
+}
+
+export async function getUserRole(userId: UserID): Promise<string | null> {
+  const supabase = await createClient();
+
+  console.log(userId);
+  const { data, error } = await supabase
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', userId)
+    .single(); // Ensures we fetch only one role
+
+  if (error && error.code !== 'PGRST116') {
+    console.error('Error fetching user role:', error);
+    return null;
+  }
+
+  return data?.role || null;
 }

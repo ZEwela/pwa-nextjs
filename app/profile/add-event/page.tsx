@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { redirect, useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Clock } from "lucide-react";
-import { DayPicker } from "react-day-picker";
-import "react-day-picker/style.css";
+import { useState } from 'react';
+import { redirect, useRouter } from 'next/navigation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { Clock } from 'lucide-react';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/style.css';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -17,57 +17,62 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { createClient } from "@/utilis/supabase/client";
-import { uploadEventImage } from "@/lib/storage";
-import { createEvent } from "../../actions";
+} from '@/components/ui/popover';
+import { createClient } from '@/utilis/supabase/client';
+import { uploadEventImage } from '@/lib/storage';
+import { createEvent } from '../../actions';
+import { withAdmin } from '@/components/with-admin';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 const formSchema = z.object({
   title: z
     .string()
-    .min(3, "Title must be at least 3 characters")
-    .max(100, "Title must be less than 100 characters"),
-  type: z.enum(["exhibition", "performance", "opening", "workshop"], {
-    required_error: "Please select an event type",
+    .min(3, 'Title must be at least 3 characters')
+    .max(100, 'Title must be less than 100 characters'),
+  type: z.enum(['exhibition', 'performance', 'opening', 'workshop'], {
+    required_error: 'Please select an event type',
   }),
-  venue: z.string().min(3, "Venue must be at least 3 characters"),
-  address: z.string().min(5, "Address must be at least 5 characters"),
+  venue: z.string().min(3, 'Venue must be at least 3 characters'),
+  address: z.string().min(5, 'Address must be at least 5 characters'),
   date: z.date({
-    required_error: "Please select a date",
+    required_error: 'Please select a date',
   }),
   time: z.string({
-    required_error: "Please select a time",
+    required_error: 'Please select a time',
   }),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  area: z.string().min(2, "Area must be at least 2 characters"),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
+  area: z.string().min(2, 'Area must be at least 2 characters'),
   image: z
     .any()
-    .refine((file) => file instanceof File, "Please upload an image")
+    .refine((file) => file instanceof File, 'Please upload an image')
     .refine(
       (file) => file.size <= MAX_FILE_SIZE,
-      "Image must be less than 5MB"
+      'Image must be less than 5MB',
     ),
 });
 
 const supabase = await createClient();
 
-export default function AddEventPage() {
+const {
+  data: { user },
+} = await supabase.auth.getUser();
+
+function AddEventPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -76,12 +81,12 @@ export default function AddEventPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      venue: "",
-      address: "",
-      description: "",
-      area: "",
-      time: "12:00",
+      title: '',
+      venue: '',
+      address: '',
+      description: '',
+      area: '',
+      time: '12:00',
     },
   });
 
@@ -90,29 +95,23 @@ export default function AddEventPage() {
     if (!file) return;
 
     if (file.size > MAX_FILE_SIZE) {
-      form.setError("image", {
-        message: "Image must be less than 5MB",
+      form.setError('image', {
+        message: 'Image must be less than 5MB',
       });
       return;
     }
 
     const preview = URL.createObjectURL(file);
     setImagePreview(preview);
-    form.setValue("image", file);
+    form.setValue('image', file);
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsSubmitting(true);
       setAuthError(null);
-
-      // Get the current user's session
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
       if (!user) {
-        return redirect("/sign-in");
+        return redirect('/sign-in');
       }
       const imageUrl = await uploadEventImage(values.image);
 
@@ -121,7 +120,7 @@ export default function AddEventPage() {
         type: values.type,
         venue: values.venue,
         address: values.address,
-        date: values.date.toISOString().split("T")[0],
+        date: values.date.toISOString().split('T')[0],
         time: values.time,
         description: values.description,
         image: imageUrl,
@@ -129,20 +128,19 @@ export default function AddEventPage() {
         user_id: user.id,
       });
 
-      router.push("/");
+      router.push('/');
       router.refresh();
     } catch (error) {
-      console.error("Error creating event:", error);
+      console.error('Error creating event:', error);
       setAuthError(
         error instanceof Error
           ? error.message
-          : "An error occurred while creating the event"
+          : 'An error occurred while creating the event',
       );
     } finally {
       setIsSubmitting(false);
     }
   };
-
   return (
     <div className="container max-w-2xl py-10">
       <div className="mb-8">
@@ -153,7 +151,7 @@ export default function AddEventPage() {
       </div>
 
       {authError && (
-        <div className="mb-6 p-4 text-sm border border-red-200 bg-red-50 text-red-600 rounded-md">
+        <div className="mb-6 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-600">
           {authError}
         </div>
       )}
@@ -189,7 +187,7 @@ export default function AddEventPage() {
                       <SelectValue placeholder="Select event type" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className="bg-white">
                     <SelectItem value="exhibition">Exhibition</SelectItem>
                     <SelectItem value="performance">Performance</SelectItem>
                     <SelectItem value="opening">Opening</SelectItem>
@@ -214,16 +212,19 @@ export default function AddEventPage() {
                         <Button
                           variant="outline"
                           className={`w-full pl-3 text-left font-normal ${
-                            !field.value && "text-muted-foreground"
+                            !field.value && 'text-muted-foreground'
                           }`}
                         >
                           {field.value
                             ? field.value.toLocaleDateString()
-                            : "Pick a date"}
+                            : 'Pick a date'}
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent
+                      className="w-auto bg-white p-0"
+                      align="start"
+                    >
                       <DayPicker
                         mode="single"
                         selected={field.value}
@@ -247,7 +248,7 @@ export default function AddEventPage() {
                   <FormControl>
                     <div className="relative">
                       <Input type="time" {...field} />
-                      <Clock className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Clock className="text-muted-foreground absolute right-3 top-2.5 h-4 w-4" />
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -358,3 +359,5 @@ export default function AddEventPage() {
     </div>
   );
 }
+
+export default withAdmin(AddEventPage);

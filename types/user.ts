@@ -44,3 +44,5 @@ export interface User {
   updated_at: string;
   is_anonymous: boolean;
 }
+
+export type UserID = string | undefined;
