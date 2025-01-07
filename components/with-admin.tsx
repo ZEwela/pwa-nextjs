@@ -1,12 +1,14 @@
-import { JSX, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { getUserRole } from '@/app/actions';
-import { createClient } from '@/utilis/supabase/client';
+'use client';
 
-export function withAdmin<T extends JSX.IntrinsicAttributes>(
-  WrappedComponent: React.ComponentType<T>,
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/utilis/supabase/client';
+import { getUserRole } from '@/app/actions';
+
+export function withAdmin<P extends object>(
+  WrappedComponent: React.ComponentType<P>,
 ) {
-  return function WithAdminWrapper(props: T) {
+  return function WithAdminComponent(props: P) {
     const router = useRouter();
     const [isAdmin, setIsAdmin] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -14,21 +16,25 @@ export function withAdmin<T extends JSX.IntrinsicAttributes>(
     useEffect(() => {
       const checkUserRole = async () => {
         const supabase = await createClient();
-
         const {
           data: { user },
         } = await supabase.auth.getUser();
 
+        if (!user) {
+          router.push('/sign-in');
+          return;
+        }
+
         try {
-          const role = await getUserRole(user?.id); // Fetch the role for the logged-in user
+          const role = await getUserRole(user.id);
           if (role === 'admin') {
             setIsAdmin(true);
           } else {
-            router.push('/profile'); // Redirect non-admin users
+            router.push('/profile');
           }
         } catch (error) {
           console.error('Error checking user role:', error);
-          router.push('/profile'); // Handle error by redirecting
+          router.push('/profile');
         } finally {
           setIsLoading(false);
         }
@@ -38,11 +44,15 @@ export function withAdmin<T extends JSX.IntrinsicAttributes>(
     }, [router]);
 
     if (isLoading) {
-      return <div>Loading...</div>; // Show a loading state while checking the user's role
+      return (
+        <div className="flex h-screen items-center justify-center">
+          <div className="text-lg">Loading...</div>
+        </div>
+      );
     }
 
     if (!isAdmin) {
-      return null; // Do not render anything for non-admin users
+      return null;
     }
 
     return <WrappedComponent {...props} />;
