@@ -1,5 +1,5 @@
-import { createServerClient } from "@supabase/ssr";
-import { type NextRequest, NextResponse } from "next/server";
+import { createServerClient } from '@supabase/ssr';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export const updateSession = async (request: NextRequest) => {
   // Initialize the response
@@ -18,18 +18,15 @@ export const updateSession = async (request: NextRequest) => {
           });
         },
       },
-    }
+    },
   );
 
   // Refresh session if expired
-  const {
-    // data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const user = await supabase.auth.getUser();
 
   // Handle protected routes
-  if (request.nextUrl.pathname.startsWith("/profile") && error) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+  if (request.nextUrl.pathname.startsWith('/profile') && user.error) {
+    return NextResponse.redirect(new URL('/sign-in', request.url));
   }
 
   // // Redirect logged-in users accessing the homepage
